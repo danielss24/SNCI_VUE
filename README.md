@@ -1,5 +1,14 @@
 # SNCI_Market
 
+Links de componentes y guías
+
+https://vuetifyjs.com/en/
+
+https://es.vuejs.org/
+
+https://firebase.google.com/docs/auth/web/password-auth?hl=es
+
+
 ## Build Setup
 
 ```bash
