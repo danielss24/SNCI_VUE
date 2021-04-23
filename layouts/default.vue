@@ -12,8 +12,10 @@
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
+          :v-if='item.if'
           router
           exact
+
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -22,7 +24,17 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+        
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block @click="logOut" 
+          v-if="user!=null"
+          >
+            Logout
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
     <v-app-bar
       :clipped-left="clipped"
@@ -89,9 +101,13 @@
 </template>
 
 <script>
+import firebase from "firebase/app";
+import 'firebase/auth';
+
 export default {
   data () {
     return {
+      
       clipped: false,
       drawer: false,
       fixed: false,
@@ -105,13 +121,59 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Inspire',
           to: '/inspire'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Login',
+          to: '/login',
+          if:'user=null'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Create',
+          to: '/create',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'profile',
+          to: '/profile'
+        },
+        {
+          icon: 'mdi-store',
+          title: 'Add Item',
+          to: '/addItem'
+        },
+        {
+          icon: 'mdi-store',
+          title: 'Supermercado',
+          to: '/dashboard'
         }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Vuetify.js',
+      user: ''
+
     }
+  },
+
+  mounted(){
+    firebase.auth().onAuthStateChanged(user => {
+      this.user = user;
+      console.log(user);
+    })
+  },
+
+  methods: {
+    logOut(){
+      firebase.auth().signOut().then(result => {
+        this.user = '';
+        this.$router.push('/');
+      })
+    }
+
   }
 }
+
 </script>
