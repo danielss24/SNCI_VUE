@@ -4,49 +4,69 @@
     max-width="344"
   >
     <v-card-text>
-      <div>Word of the Day</div>
-      <p class="display-1 text--primary">
-        el·ee·mos·y·nar·y
-      </p>
-      <p>adjective</p>
-      <div class="text--primary">
-        relating to or dependent on charity; charitable.<br>
-        "an eleemosynary educational institution."
-      </div>
+      <div>Add new item to market</div>
+        <v-form>
+          <v-text-field
+            v-model="nameArt"
+            masked="true"
+            label="Article"
+            prepend-icon="mdi-basket-plus"
+          />
+          <v-text-field
+            v-model="quantity"
+            label="Quantity"
+            prepend-icon="mdi-sale"
+          />
+        </v-form>
     </v-card-text>
     <v-card-actions>
       <v-btn
-        text
-        color="teal accent-4"
-        @click="reveal = true"
+      class="mx-2"
+      fab
+      dark
+      color="indigo"
+      @click="addItem"
       >
-        Learn More
+        <v-icon dark>
+        mdi-plus
+        </v-icon>
       </v-btn>
     </v-card-actions>
 
-    <v-expand-transition>
-      <v-card
-        v-if="reveal"
-        class="transition-fast-in-fast-out v-card--reveal"
-        style="height: 100%;"
-      >
-        <v-card-text class="pb-0">
-          <p class="display-1 text--primary">
-            Origin
-          </p>
-          <p>late 16th century (as a noun denoting a place where alms were distributed): from medieval Latin eleemosynarius, from late Latin eleemosyna ‘alms’, from Greek eleēmosunē ‘compassion’ </p>
-        </v-card-text>
-        <v-card-actions class="pt-0">
-          <v-btn
-            text
-            color="teal accent-4"
-            @click="reveal = false"
-          >
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-expand-transition>
+    
   </v-card>
 </template>
 
+<script>
+
+import firebase from "firebase/app";
+import firestore from "firebase/firestore";
+import 'firebase/auth';
+import { db,itemsDB } from "../plugins/firebase";
+
+export default {
+  data: () => ({
+    db,
+    firebase,
+    nameArt, 
+    quantity
+  }),
+  methods: {
+      addItem () {
+        itemsDB.add({
+          text: this.nameArt,
+          completed: false,
+          createdAt: new Date()
+        })
+        .then(function(docRef) {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch(function(error) {
+          console.error("Error adding document: ", error);
+        });
+        this.newTodo = '';
+        
+      }
+  }
+}
+</script>
