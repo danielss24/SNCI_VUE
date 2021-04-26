@@ -53,7 +53,7 @@ import firebase from "firebase/app";
 import firestore from "firebase/firestore";
 import 'firebase/auth';
 import { db,itemsDB } from "../plugins/firebase";
-import { itemMarket } from "../store/itemMarket";
+import { itemMarket } from "../store/item";
 
 export default {
   data: () => ({
