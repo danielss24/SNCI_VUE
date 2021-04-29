@@ -1,90 +1,76 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { usersDB } from "../services/firebase"
-import 'firebase/auth';
-
-/*
-
-USER 
-
-- Id
-- Nombre
-- Foto ?
-- Fecha alta
-- Fecha nacimiento ?
-
-*/
+import {  auth, getCurrentUser } from "../services/firebase"
+import firebase from "../services/firebase"
 
 export const state = () => ({
-    return : {
-        user: null,
-        error: null 
-    }
+    user: {
+        displayName: '',
+        uid: null, // no null si está logueado
+        email: null,
+        photoURL: ''
+    },
+    // 
+    error : '',
+    afterLogin: '/profile', // donde dirigirse una vez complete el login (si accedió y no tenía permiso)
+    listeningAuth: false
 })
 
 export const getters =  {
-        getUser: (state) => {
-            return state.user;
-        },
-        isUserAuth(state) {
-            return !!state.user;
-        },
-        getError(state) {
-            return state.error;
-        }
-    }
+    logged: (state, getters, rootState) => state.user.uid !== null
+}
 //Mutaciones son sincronas
 export const mutations = {
-    setUser(state, payload) {
-        state.user = payload
+    setUser(state, user) {
+        if (user) {
+            state.user.email = user.email
+            state.user.displayName = user.displayName
+            state.user.uid = user.uid
+            state.user.photoURL = user.photoURL || ""
+        } else {
+          // clearUserState
+          state.user.displayName = ''
+          state.user.uid = null
+          state.user.email = ''
+          state.user.photoURL = ''
+        }
     },
     setError(state, payload) {
         state.error = payload
-    }/*,
-    modify (state,usersDBUpdated) {
-        console.log(usersDBUpdated)
-        state = usersDBUpdated
-    }*/
+    },
+    setListeningAuth(state, listening) {
+        state.listeningAuth = listening
+    },
+    setAfterLogin(state, payload) {
+        state.afterLogin = payload
+    }
 }
 // generalmente son asincronas
 export const actions = {
-    signUpAction({ commit }, payload) {
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(payload.email, payload.password)
-            .then(response => {
-            commit("setUser", response.user);
-            })
-            .catch(error => {
+    async signUpAction({ commit }, payload) {
+        try{
+            await auth.createUserWithEmailAndPassword(payload.email, payload.password)
+        } catch (error){
             commit("setError", error.message);
-            });
+        }       
     },
-    signInAction({ commit }, payload) {
-        firebase.auth().signInWithEmailAndPassword(payload.email,this.password).then(user => {
-            console.log(user);
-            commit("setUser", response.user);
-
-            usersDB.add().set({
-                name: data.name,
-                email: data.email,
-                dateUp: data.dateUp
-            })
-            this.$router.push('/profile')
-
-        })
-        .catch((error) => {
-            alert(error.message)
+    async signInAction({ commit }, payload) {
+        try{
+           await auth.signInWithEmailAndPassword(payload.email,payload.password)
+        } catch (error){
             commit("setError", error.message);
-        })
+        }       
     },
-    subscribe ({state,commit}) {
-
-        const observer = itemsDB.onSnapShot(querySnapshot => {
-            console.log("Recieved change, ${querySnapshot}")
-            commit("modify",usersDBUpdated)
-        }, error => {
-            console.log("Error: ${error}")
-        })
-
+    async initAuth({ state, commit, dispatch }) {
+        if (!state.listeningAuth) {
+          commit('setListeningAuth', true)
+          auth.onAuthStateChanged(user => {
+            commit('setUser', user)
+          })
+          const user = await getCurrentUser() // Obtiene el usuario si no se cerrá sesión
+          const prevUid = state.user.uid
+          const newUid = user ? user.uid : null
+          if (prevUid !== newUid) commit('setUser', user)
+        }
     }
 }

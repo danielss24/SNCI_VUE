@@ -56,7 +56,7 @@ data: () => ({
     errors: ''
 }),
 methods: {
-  ...mapActions(['signUpAction']),
+    ...mapActions('users',['signUpAction']),
     create () {
       this.signUpAction({ email: this.email, password: this.password });
     }

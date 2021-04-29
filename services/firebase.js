@@ -1,10 +1,7 @@
 import firebase from "firebase/app";
 import 'firebase/auth';
 import 'firebase/firestore';
-import Vue from 'vue'
-import { firestorePlugin } from 'vuefire'
-
-Vue.use(firestorePlugin)
+import 'firebase/storage'
 
 const firebaseConfig = {
     apiKey: "AIzaSyCewh7noLtr7FZcK2ItActwmwS678YLtBk",
@@ -16,23 +13,32 @@ const firebaseConfig = {
     measurementId: "G-YYMX1B1CN7"
 };
 
-let app = null;
-let db = null;
-let usersDB = null;
-let itemsDB = null;
-
-if (!firebase.apps.length){
-    app = firebase.initializeApp(firebaseConfig);    
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig)
+} else {
+    firebase.app() // if already initialized, use that one
 }
 
-db = firebase.firestore();
-usersDB = db.collection('users');
-itemsDB = db.collection('market');
+export const db = firebase.firestore()
+export const storage = firebase.storage()
 
+export const itemsDB = db.collection('market')
 
-export {
-    firebase,
-    db,
-    usersDB,
-    itemsDB   
+export const auth = firebase.auth()
+
+function getCurrentUserPromise(auth) {
+    return new Promise((resolve, reject) => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+        unsubscribe()
+        resolve(user)
+        }, reject)
+    })
 }
+  
+export const getCurrentUser = async () => {
+    if (auth.currentUser) return auth.currentUser
+    const result = await getCurrentUserPromise(auth)
+    return result
+}
+
+export default firebase

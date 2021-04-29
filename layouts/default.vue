@@ -130,11 +130,6 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Create',
-          to: '/create',
-        },
-        {
-          icon: 'mdi-chart-bubble',
           title: 'profile',
           to: '/profile'
         },
@@ -147,6 +142,11 @@ export default {
           icon: 'mdi-store',
           title: 'Supermercado',
           to: '/dashboard'
+        },
+        {
+          icon: 'mdi-store',
+          title: 'Item Card',
+          to: '/fbItemCard'
         }
       ],
       miniVariant: false,
