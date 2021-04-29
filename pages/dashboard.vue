@@ -26,7 +26,7 @@
   import firebase from "firebase/app";
   import 'firebase/auth';
   import 'firebase/firestore'
-  import { itemsDB } from '../plugins/firebase';
+  import { itemsDB } from '../services/firebase';
   export default {
     
     mounted() {

@@ -10,7 +10,7 @@
           Bienvenid@
         </div>
         <v-list-item-title class="headline mb-1">
-          {{ email }}
+          {{ getUser.email }}
         </v-list-item-title>
         <v-list-item-subtitle>Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle>
       </v-list-item-content>
@@ -37,7 +37,10 @@
 <script>
 import firebase from "firebase/app";
 import 'firebase/auth';
+import {mapGetters} from 'vuex';
+
 export default {
+
     data: () => ({
         
         return: {
@@ -45,20 +48,16 @@ export default {
         }
     }),
     computed:{
-      email(){
-          if (firebase.auth().currentUser) {
-              return firebase.auth().currentUser.email
-          }
-      }
+      ...mapGetters(['getUser', 'isUserAuth']),
     },
     mounted(){    
-        firebase.auth().onAuthStateChanged(user => {
-            this.user = user;
-            console.log(user);
-            if (!this.user){
-                this.$router.push('/');
-        }
-        })
+      firebase.auth().onAuthStateChanged(user => {
+          this.user = user;
+          console.log(user);
+          if (!this.user){
+              this.$router.push('/');
+      }
+      })
     }
 }
 </script>

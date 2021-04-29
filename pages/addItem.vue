@@ -52,22 +52,25 @@
 import firebase from "firebase/app";
 import firestore from "firebase/firestore";
 import 'firebase/auth';
-import { db,itemsDB } from "../plugins/firebase";
-import { itemMarket } from "../store/item";
+import { db,itemsDB } from "../services/firebase";
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 
 export default {
   data: () => ({
     db,
     firebase,
-    name: '', 
-    quantity: '',
-    rating: 0,
-    description: ''
+    
+    return: {
+      name: '', 
+      quantity: '',
+      rating: 0,
+      description: '',
+      data: {}
+    }
     //itemMarket
   }),
   methods: {
       addItem () {
-        //itemsDB.doc(beerAux.id).collection('recipe').add(beerAux.recipe)
         
       /*  itemsDB.add({
           text: this.name
@@ -77,13 +80,22 @@ export default {
         })
         .catch(function(error) {
           console.error("Error adding document: ", error);
-        });*/
+        });
+
         itemsDB.doc(this.name).set({
           name: this.name,
           quantity: this.quantity,
           rating: this.rating,
           description: this.description
-        })
+        })*/
+        console.log(this.name)
+        console.log(this.quantity)
+        console.log(this.description)
+        console.log(this.rating)
+        //console.log([this.name, this.quantity, this.rating, this.description])
+        //this.$storeMarket.state.item = {name =  this.name, quantity =  this.quantity, rating = this.rating, description= this.description}
+        console.log(this.$storeMarket.state.item)
+        this.$storeMarket.commit('add',data)
       },    
   }
 }

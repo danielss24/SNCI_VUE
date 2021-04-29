@@ -51,26 +51,23 @@
 
 <script>
 import firebase from "firebase/app";
-import 'firebase/auth';
+
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
+
+
 export default {
-data: () => ({
-    email: '',
-    password: '',
-    showPassword: false,
-    errors: ''
-}),
-methods: {
-    login () {
-        firebase.auth().signInWithEmailAndPassword(this.email,this.password).then(user => {
-            console.log(user);
-            this.user = user;
-            this.$router.push('/profile')
-        })
-        .catch((error) => {
-            this.errors = error;
-            alert(error.message)
-        })
-    }
+  data: () => ({
+      email: '',
+      password: '',
+      showPassword: false,
+      errors: '',
+      valid: null
+  }),
+  methods: {
+      ...mapActions(["signInAction"]),
+      login () {
+        this.signInAction({ email: this.email, password: this.password });     
+      }
 }
 }
 </script>

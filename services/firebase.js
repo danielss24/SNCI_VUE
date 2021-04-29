@@ -6,8 +6,6 @@ import { firestorePlugin } from 'vuefire'
 
 Vue.use(firestorePlugin)
 
-
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyCewh7noLtr7FZcK2ItActwmwS678YLtBk",
     authDomain: "sncimarket.firebaseapp.com",
@@ -24,12 +22,13 @@ let usersDB = null;
 let itemsDB = null;
 
 if (!firebase.apps.length){
-    app = firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    usersDB = db.collection('users');
-    itemsDB = db.collection('market');
-
+    app = firebase.initializeApp(firebaseConfig);    
 }
+
+db = firebase.firestore();
+usersDB = db.collection('users');
+itemsDB = db.collection('market');
+
 
 export {
     firebase,
