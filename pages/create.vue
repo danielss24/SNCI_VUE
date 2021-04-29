@@ -47,6 +47,7 @@
 
 import firebase from "firebase/app";
 import 'firebase/auth';
+import { mapActions } from 'vuex';
 export default {
 data: () => ({
     email: '',
@@ -54,23 +55,10 @@ data: () => ({
     showPassword: false,
     errors: ''
 }),
-computed:{
-    email(){
-        if (this.$fireAuth.currentUser) {
-            return this.$fireAuth.currentUser.email
-        }
-    }
-},
 methods: {
+  ...mapActions(['signUpAction']),
     create () {
-        firebase.auth().createUserWithEmailAndPassword(this.email,this.password).then(user => {
-            console.log(user);
-            this.$router.push('/profile')
-        })
-        .catch((error) => {
-            this.errors = error;
-            alert(error.message)
-        })
+      this.signUpAction({ email: this.email, password: this.password });
     }
 }
 }
