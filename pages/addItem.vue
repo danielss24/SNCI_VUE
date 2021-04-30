@@ -52,50 +52,27 @@
 import firebase from "firebase/app";
 import firestore from "firebase/firestore";
 import 'firebase/auth';
-import { db,itemsDB } from "../services/firebase";
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 
 export default {
+  ... mapState('market',['market']),
   data: () => ({
     db,
     firebase,
     
-    return: {
-      name: '', 
-      quantity: '',
-      rating: 0,
-      description: '',
-      data: {}
-    }
+    name: '', 
+    quantity: '',
+    rating: 0,
+    description: '',
+    data: {}
     //itemMarket
   }),
-  methods: {
-      addItem () {
-        
-      /*  itemsDB.add({
-          text: this.name
-        })
-        .then(function(docRef) {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(function(error) {
-          console.error("Error adding document: ", error);
-        });
 
-        itemsDB.doc(this.name).set({
-          name: this.name,
-          quantity: this.quantity,
-          rating: this.rating,
-          description: this.description
-        })*/
-        console.log(this.name)
-        console.log(this.quantity)
-        console.log(this.description)
-        console.log(this.rating)
-        //console.log([this.name, this.quantity, this.rating, this.description])
-        //this.$storeMarket.state.item = {name =  this.name, quantity =  this.quantity, rating = this.rating, description= this.description}
-        console.log(this.$storeMarket.state.item)
-        this.$storeMarket.commit('add',data)
+  methods: {
+      ...mapActions('market',["addFilm"]),
+      addItem () {
+        console.log({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description })
+        this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 0 })
       },    
   }
 }
