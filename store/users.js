@@ -47,7 +47,7 @@ export const mutations = {
 }
 // generalmente son asincronas
 export const actions = {
-    async signUpAction({ commit }, payload) {
+  /*  async signUpAction({ commit }, payload) {
         try{
             await auth.createUserWithEmailAndPassword(payload.email, payload.password)
         } catch (error){
@@ -60,7 +60,7 @@ export const actions = {
         } catch (error){
             commit("setError", error.message);
         }       
-    },
+    },*/
     async initAuth({ state, commit, dispatch }) {
         if (!state.listeningAuth) {
           commit('setListeningAuth', true)

@@ -57,7 +57,6 @@ import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 export default {
   ... mapState('market',['market']),
   data: () => ({
-    db,
     firebase,
     
     name: '', 
@@ -71,8 +70,8 @@ export default {
   methods: {
       ...mapActions('market',["addFilm"]),
       addItem () {
-        console.log({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description })
-        this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 0 })
+        //console.log({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description })
+        this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 1 })
       },    
   }
 }

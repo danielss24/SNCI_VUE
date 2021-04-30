@@ -24,6 +24,12 @@ $ npm run start
 
 # generate static project
 $ npm run generate
+
+$ indicar icono - con el plugin PWA
+$ configurar firebase para que coja el directorio dist
+$ firebase deploy
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+

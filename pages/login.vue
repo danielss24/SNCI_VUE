@@ -1,5 +1,4 @@
 <template>
-  
   <div id="firebaseui-auth-container" />
 </template>
 
@@ -36,13 +35,8 @@ export default {
   },
   methods: {
       ...mapActions('users',["signInAction","initAuth"]),
-      /*login () {
-        console.log(this.password)
-        this.signInAction({ email: this.email, password: this.password });
-      },*/
       showLogin(firebaseui) {
         const uiConfig = {
-          // signInSuccessUrl: '<url-to-redirect-to-on-success>', //En Nuxt esto sería un problema, ya que firebase-ui no usa vue-route
           signInOptions: [
             // Leave the lines as is for the providers you want to offer your users.
             firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -53,14 +47,6 @@ export default {
             // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
             // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
           ],
-          // tosUrl and privacyPolicyUrl accept either url string or a callback
-          // function.
-          // Terms of service url/callback.
-          // tosUrl: '<your-tos-url>',
-          // Privacy policy url/callback.
-          // privacyPolicyUrl: function() {
-          //  window.location.assign('<your-privacy-policy-url>')
-          // }
           callbacks: {
             signInSuccessWithAuthResult() {
               return 0
