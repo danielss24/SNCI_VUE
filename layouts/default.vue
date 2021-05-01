@@ -167,10 +167,7 @@ export default {
 
   methods: {
     logOut(){
-      firebase.auth().signOut().then(result => {
-        this.user = '';
-        this.$router.push('/');
-      })
+      firebase.auth().signOut()
     }
 
   }

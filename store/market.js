@@ -1,5 +1,5 @@
 import { mapActions } from "vuex"
-import { itemsDB } from "../services/firebase"
+import { itemsDB, usersDB } from "../services/firebase"
  /*
 
 ITEMS ( PELICULAS ):
@@ -11,13 +11,23 @@ ITEMS ( PELICULAS ):
 
 */
 
+/*
+Film(
+    name
+    quantity
+    rating
+    description
+    contVal
+})*/
+
+
 export const state = () =>({
     marketDic : {},
     observer: null,
     error: ''
 })
 export const getters = {
-
+    
 }
 //Mutaciones son sincronas
 export const mutations = {
@@ -37,10 +47,28 @@ export const actions = {
     },
     subscribeMarket ({commit}) {
         var observer = itemsDB.onSnapshot((querySnapshot) => {
-            //console.log("si o q", querySnapshot.data()) 
+            //console.log("si o q", querySnapshot.data())
             commit("modify",{querySnapshot,observer})
         }, error => {
             console.log("Error: ${error}")
         })        
-    }
+    },
+    rateFilm({state},{id,value}){
+        console.log("rating BD", state.marketDic[id].rating)
+        console.log("rating Input", value)
+        itemsDB.doc(id).update({
+            contVal: state.marketDic[id].contVal+1,
+            rating: value+state.marketDic[id].rating
+        }).then(() => {
+            console.log("Document successfully updated!");
+            console.log(state.marketDic[id])
+        })
+        .catch((error) => {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+        });
+    }/*,
+    rentFilm(state,{id}){
+        usersDB.
+    }*/
 }

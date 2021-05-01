@@ -23,6 +23,7 @@ export const db = firebase.firestore()
 export const storage = firebase.storage()
 
 export const itemsDB = db.collection('market')
+export const usersDB = db.collection('users')
 
 export const auth = firebase.auth()
 

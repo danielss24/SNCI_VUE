@@ -21,9 +21,9 @@
               
             </v-img>
 
-            <v-fab-transition>
+            <v-fab-transition >
                 <v-btn
-                  v-show="!hidden"
+                  v-show="logged"
                   color="pink"
                   fab
                   dark
@@ -31,7 +31,7 @@
                   absolute
                   right
                 >
-                  <v-icon>mdi-basket-plus</v-icon>
+                  <v-icon >mdi-basket-plus</v-icon>
                 </v-btn>
               </v-fab-transition>
 
@@ -41,23 +41,26 @@
               </v-list-item-content>
 
             </v-list-item>
-
-              
+            <span class="pl-2 grey--text text--darken-2 font-weight-light caption">{{n.contVal}} reviews</span>
             <v-card-actions>
-                  <span class="pl-2 grey--text text--darken-2 font-weight-light caption">{{n.contVal}} reviews</span>
-                  <v-rating
+                  
+                  <v-rating 
                   background-color="indigo lighten-3"
                   color="indigo"
                   :value="n.rating/n.contVal"
                   hover
+                  half-increments
+                  @input="rate($event, n.id)"
                   ></v-rating>
+                  <span class="grey--text text--lighten-2 caption mr-2">
+                    ({{ (n.rating/n.contVal).toFixed(2) }})
+                  </span>
             </v-card-actions>
             <v-card-actions>
                 <span class="pl-2 grey--text text--darken-2 font-weight-light caption">Stock: </span>
                 <v-list-item-subtitle>
                     {{n.quantity}}
-                </v-list-item-subtitle>
-            
+                </v-list-item-subtitle>            
             </v-card-actions>
           </v-card>
 
@@ -81,15 +84,26 @@
 //      this.getDataFB(collectionItem)
     },
     computed:{
-      ... mapState('market',['marketDic'])
+      ... mapState('market',['marketDic']),
+      ... mapGetters('users',['logged'])
     },
     methods: {
-      ...mapActions('market',['subscribeMarket']),
+      ...mapActions('market',['subscribeMarket','rateFilm','rentFilm']),
       async getDataFB (collectionItem) {
         const snapshot = await collectionItem.get();
         snapshot.forEach(doc => {
           console.log(doc.id, '=>', doc.data());
         });
+      },
+      rate(value, id){
+        console.log("ID DASH", id)
+        console.log("VALUE DASH", value)
+        if (id != NaN && value != NaN){
+          this.rateFilm({id,value})
+        }
+      },
+      rent(id){
+        this.rentFilm({id})
       }
     },
 
