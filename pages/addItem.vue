@@ -70,8 +70,7 @@ export default {
   methods: {
       ...mapActions('market',["addFilm"]),
       addItem () {
-        //console.log({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description })
-        this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 1 })
+        this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 1, rented: 0 })
       },    
   }
 }

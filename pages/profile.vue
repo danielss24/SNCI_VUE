@@ -31,6 +31,7 @@
         outlined
         rounded
         text
+        @click="testDB"
       >
         Button
       </v-btn>
@@ -41,7 +42,7 @@
 <script>
 import firebase from "firebase/app";
 import 'firebase/auth';
-import {mapGetters, mapState} from 'vuex';
+import {mapActions, mapGetters, mapState} from 'vuex';
 
 export default {
   // Con linea 44, carga y ejecuta middleware
@@ -49,9 +50,19 @@ export default {
   data: () => ({
       
   }),
+  created() {
+      this.subscribeMarket()
+  },
   computed:{
     ...mapState('users',['user'])
   },
+  methods:{
+      ...mapActions('market',['subscribeMarket']),
+    ...mapActions('users',['test']),
+    testDB(){
+      this.test()
+    }
+  }
 
 }
 </script>

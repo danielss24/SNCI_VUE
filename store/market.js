@@ -1,5 +1,5 @@
 import { mapActions } from "vuex"
-import { itemsDB, usersDB } from "../services/firebase"
+import firebase, { itemsDB, usersDB } from "../services/firebase"
  /*
 
 ITEMS ( PELICULAS ):
@@ -38,16 +38,20 @@ export const mutations = {
             state.marketDic[doc.id] = aux
         });   
         state.observer = observer
-    }
+    },
+    setUserFilmDB(state,data){
+        console.log("setUserFilmDB", user)
+    }    
+      
 }
 // generalmente son asincronas
 export const actions = {
     addFilm ({commit}, data)  {
         itemsDB.add(data)
+        //commit("listUsers")
     },
     subscribeMarket ({commit}) {
         var observer = itemsDB.onSnapshot((querySnapshot) => {
-            //console.log("si o q", querySnapshot.data())
             commit("modify",{querySnapshot,observer})
         }, error => {
             console.log("Error: ${error}")
@@ -67,8 +71,10 @@ export const actions = {
             // The document probably doesn't exist.
             console.error("Error updating document: ", error);
         });
-    }/*,
-    rentFilm(state,{id}){
-        usersDB.
-    }*/
+    },
+    rentFilm(state,{id,userId}){
+        usersDB.doc(userId).update({
+            id: 1
+        })
+    }
 }

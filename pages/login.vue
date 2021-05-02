@@ -34,7 +34,7 @@ export default {
     this.showLogin(firebaseui)
   },
   methods: {
-      ...mapActions('users',["signInAction","initAuth"]),
+      ...mapActions('users',["signInAction","initAuth","test"]),
       showLogin(firebaseui) {
         const uiConfig = {
           signInOptions: [
@@ -49,12 +49,15 @@ export default {
           ],
           callbacks: {
             signInSuccessWithAuthResult() {
+              console.log("eh")
+              this.test()
+              console.log("eh")
               return 0
-            }
+            },
+            
           }
         }
-        const ui =
-          firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth)
+        const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth)
         // The start method will wait until the DOM is loaded.
         ui.start('#firebaseui-auth-container', uiConfig)
       }

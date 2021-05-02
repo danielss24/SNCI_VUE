@@ -77,7 +77,6 @@
 
   export default {
     created (){
-      console.log("susb")
       this.subscribeMarket()
     },
     mounted() {
@@ -85,6 +84,7 @@
     },
     computed:{
       ... mapState('market',['marketDic']),
+      //... mapState('users',['user']),
       ... mapGetters('users',['logged'])
     },
     methods: {
@@ -96,16 +96,16 @@
         });
       },
       rate(value, id){
-        console.log("ID DASH", id)
-        console.log("VALUE DASH", value)
         if (id != NaN && value != NaN){
           this.rateFilm({id,value})
         }
       },
-      rent(id){
-        this.rentFilm({id})
-      }
-    },
+      /*rent(id){
+        console.log(id),
+        console.log(this.user.uid),
+        this.rentFilm(id,this.user.uid)
+      }*/
+    }
 
   }
 </script>

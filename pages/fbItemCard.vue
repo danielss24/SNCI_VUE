@@ -40,7 +40,7 @@
 
   export default {
     created (){
-      console.log(this.marketDic)
+      //console.log(this.marketDic)
     },
     computed:{
       ... mapState('market',['marketDic']),

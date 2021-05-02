@@ -29,12 +29,14 @@
       <template v-slot:append>
         <div class="pa-2">
           <v-btn block @click="logOut" 
-          v-if="user!=null"
+          v-if="logged==true"
           >
             Logout
           </v-btn>
         </div>
+      <!--<div v-if="logged==false" id="firebaseui-auth-container_bar" />-->
       </template>
+
     </v-navigation-drawer>
     <v-app-bar
       :clipped-left="clipped"
@@ -101,8 +103,9 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import 'firebase/auth';
+import firebase, { auth } from '~/services/firebase'
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
+
 
 export default {
   data () {
@@ -157,20 +160,50 @@ export default {
 
     }
   },
-
+  created() {
+    this.initAuth()
+  },
+  computed: {
+    ...mapGetters('users',["logged"])
+  },
   mounted(){
-    firebase.auth().onAuthStateChanged(user => {
-      this.user = user;
-      console.log(user);
-    })
+    //const firebaseui = require('firebaseui')    
+    //this.showLogin(firebaseui)
   },
 
   methods: {
+    ...mapActions('users',["signOutAction","initAuth"]),
     logOut(){
-      firebase.auth().signOut()
-    }
-
+      this.signOutAction()  
+    },
+    /*showLogin(firebaseui) {
+        const uiConfig = {
+          signInOptions: [
+            // Leave the lines as is for the providers you want to offer your users.
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+            // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+            // firebase.auth.GithubAuthProvider.PROVIDER_ID,
+            //firebase.auth.EmailAuthProvider.PROVIDER_ID
+            // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+            // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+          ],
+          callbacks: {
+            signInSuccessWithAuthResult() {
+              return 0
+            }
+          }
+        }
+        const ui =
+          firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth)
+        // The start method will wait until the DOM is loaded.
+        ui.start('#firebaseui-auth-container_bar', uiConfig)
+      }*/
   }
+
+  
 }
 
 </script>
+
+<style src="~/node_modules/firebaseui/dist/firebaseui.css"></style>

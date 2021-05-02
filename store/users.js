@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { mapState } from 'vuex'
 import {  auth, getCurrentUser } from "../services/firebase"
 import firebase from "../services/firebase"
 
@@ -13,7 +13,8 @@ export const state = () => ({
     // 
     error : '',
     afterLogin: '/profile', // donde dirigirse una vez complete el login (si accedió y no tenía permiso)
-    listeningAuth: false
+    listeningAuth: false,
+    usersRent: {}
 })
 
 export const getters =  {
@@ -28,11 +29,11 @@ export const mutations = {
             state.user.uid = user.uid
             state.user.photoURL = user.photoURL || ""
         } else {
-          // clearUserState
-          state.user.displayName = ''
-          state.user.uid = null
-          state.user.email = ''
-          state.user.photoURL = ''
+            // clearUserState
+            state.user.displayName = ''
+            state.user.uid = null
+            state.user.email = ''
+            state.user.photoURL = ''
         }
     },
     setError(state, payload) {
@@ -47,20 +48,6 @@ export const mutations = {
 }
 // generalmente son asincronas
 export const actions = {
-  /*  async signUpAction({ commit }, payload) {
-        try{
-            await auth.createUserWithEmailAndPassword(payload.email, payload.password)
-        } catch (error){
-            commit("setError", error.message);
-        }       
-    },
-    async signInAction({ commit }, payload) {
-        try{
-           await auth.signInWithEmailAndPassword(payload.email,payload.password)
-        } catch (error){
-            commit("setError", error.message);
-        }       
-    },*/
     async initAuth({ state, commit, dispatch }) {
         if (!state.listeningAuth) {
           commit('setListeningAuth', true)
@@ -72,5 +59,16 @@ export const actions = {
           const newUid = user ? user.uid : null
           if (prevUid !== newUid) commit('setUser', user)
         }
+    },
+    signOutAction({state,commit}){
+        console.log(state.user),
+        firebase.auth().signOut().then(user => {
+            console.log(user),
+            commit('setUser', user)
+      })
+    },
+    test(store){
+        console.log("TEST")
+        console.log(store.state.marketDic)
     }
 }
