@@ -9,6 +9,7 @@ import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 
 
 export default {
+  name: "login",
   data: () => ({
       errors: ''
   }),

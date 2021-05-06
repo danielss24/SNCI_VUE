@@ -6,7 +6,6 @@
           <v-col
             v-for="n in this.marketDic"
             :key="n.id"
-            cols="4"
           >
           <v-card
             class="mx-auto"

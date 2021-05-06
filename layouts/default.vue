@@ -29,11 +29,13 @@
       <template v-slot:append>
         <div class="pa-2">
           <v-btn block @click="logOut" 
-          v-if="user!=null"
+          v-if="logged"
           >
             Logout
           </v-btn>
+          <login v-else> </login>
         </div>
+
       </template>
     </v-navigation-drawer>
     <v-app-bar
@@ -103,6 +105,7 @@
 <script>
 import firebase from "firebase/app";
 import 'firebase/auth';
+import { mapGetters } from 'vuex';
 
 export default {
   data () {
@@ -121,12 +124,6 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Inspire',
           to: '/inspire'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Login',
-          to: '/login',
-          if:'user=null'
         },
         {
           icon: 'mdi-chart-bubble',
@@ -164,7 +161,9 @@ export default {
       console.log(user);
     })
   },
-
+  computed:{
+    ...mapGetters('users',['logged'])
+  },
   methods: {
     logOut(){
       firebase.auth().signOut()

@@ -31,12 +31,16 @@ export const getters = {
 }
 //Mutaciones son sincronas
 export const mutations = {
-    modify (state,{querySnapshot,observer}) {
+    modify (state,querySnapshot) {
+        const marketDic = {}
         querySnapshot.forEach((doc) => {
             var aux = doc.data()
             aux["id"] = doc.id
-            state.marketDic[doc.id] = aux
-        });   
+            marketDic[doc.id] = aux
+        }); 
+        state.marketDic = marketDic
+    },
+    setObserver(state,observer){
         state.observer = observer
     }
 }
@@ -46,12 +50,14 @@ export const actions = {
         itemsDB.add(data)
     },
     subscribeMarket ({commit}) {
-        var observer = itemsDB.onSnapshot((querySnapshot) => {
-            //console.log("si o q", querySnapshot.data())
-            commit("modify",{querySnapshot,observer})
-        }, error => {
-            console.log("Error: ${error}")
-        })        
+        if (state.observer == null){
+            const observer = itemsDB.onSnapshot((querySnapshot) => {
+                commit("modify",querySnapshot)
+            }, error => {
+                console.log("Error: ${error}")
+            })
+            commit("setObserver",observer)
+        }
     },
     rateFilm({state},{id,value}){
         console.log("rating BD", state.marketDic[id].rating)

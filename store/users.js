@@ -8,7 +8,7 @@ export const state = () => ({
         displayName: '',
         uid: null, // no null si está logueado
         email: null,
-        photoURL: ''
+        photoURL: ''        
     },
     // 
     error : '',
