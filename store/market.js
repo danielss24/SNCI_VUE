@@ -26,9 +26,6 @@ export const state = () =>({
     observer: null,
     error: ''
 })
-export const getters = {
-    
-}
 //Mutaciones son sincronas
 export const mutations = {
     modify (state,querySnapshot) {
@@ -60,8 +57,6 @@ export const actions = {
         }
     },
     rateFilm({state},{id,value}){
-        console.log("rating BD", state.marketDic[id].rating)
-        console.log("rating Input", value)
         itemsDB.doc(id).update({
             contVal: state.marketDic[id].contVal+1,
             rating: value+state.marketDic[id].rating
