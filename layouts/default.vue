@@ -12,7 +12,7 @@
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
-          :v-if='item.if'
+          :v-if="item.if"
           router
           exact
 
@@ -122,13 +122,9 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'profile',
-          to: '/profile'
+          title: 'Profile',
+          to: '/profile',
+          if: 'logged'
         },
         {
           icon: 'mdi-store',
@@ -139,11 +135,6 @@ export default {
           icon: 'mdi-store',
           title: 'Supermercado',
           to: '/dashboard'
-        },
-        {
-          icon: 'mdi-store',
-          title: 'Item Card',
-          to: '/fbItemCard'
         }
       ],
       miniVariant: false,

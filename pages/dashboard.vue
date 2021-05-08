@@ -51,6 +51,8 @@
                   half-increments
                   @input="rate($event, n.id)"
                   ></v-rating>
+
+
                   <span class="grey--text text--lighten-2 caption mr-2">
                     ({{ (n.rating/n.contVal).toFixed(2) }})
                   </span>
@@ -94,12 +96,14 @@
           console.log(doc.id, '=>', doc.data());
         });
       },
-      rate(value, id){
+      async rate(value, id){
         console.log("ID DASH", id)
         console.log("VALUE DASH", value)
         if (id != NaN && value != NaN){
-          this.rateFilm({id,value})
+          await this.$nextTick()
+          await this.rateFilm({id,value})
         }
+        
       },
       rent(id){
         this.rentFilm({id})
