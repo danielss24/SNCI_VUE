@@ -44,7 +44,10 @@ export const mutations = {
 // generalmente son asincronas
 export const actions = {
     addFilm ({commit}, data)  {
-        itemsDB.add(data)
+        return itemsDB.add(data)
+    },
+    deleteFilm ({commit}, id)  {
+        return itemsDB.doc(id).delete()
     },
     subscribeMarket ({commit}) {
         if (state.observer == null){

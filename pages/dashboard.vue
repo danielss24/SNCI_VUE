@@ -20,23 +20,39 @@
               
             </v-img>
 
-            <v-fab-transition >
+            
+            <v-list-item three-line>
+              <v-fab-transition >
                 <v-btn
                   v-show="logged"
-                  color="pink"
+                  color="purple"
                   fab
                   dark
                   small
                   absolute
                   right
+                  top
                 >
                   <v-icon >mdi-basket-plus</v-icon>
                 </v-btn>
               </v-fab-transition>
-
-            <v-list-item three-line>
+            <v-fab-transition >
+                <v-btn
+                  v-show="loggedAdmin"
+                  color="red"
+                  fab
+                  dark
+                  small
+                  absolute
+                  left
+                  top
+                  @click="deleteItem(n.id, n.name)"
+                >
+                  <v-icon >mdi-delete</v-icon>
+                </v-btn>
+              </v-fab-transition>
               <v-list-item-content>
-                <v-list-item-subtitle>{{n.description}}</v-list-item-subtitle>
+                <v-card-text>{{n.description}}</v-card-text>
               </v-list-item-content>
 
             </v-list-item>
@@ -68,6 +84,24 @@
           </v-col>
         </v-row>
       </v-container>
+      <v-alert v-if="error" :dismissible="true" @click='error = ""' type="error">
+        {{ error }}
+      </v-alert>
+      <v-snackbar
+        v-model="snackbar"
+      >
+        {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="green"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
   
   
@@ -77,19 +111,28 @@
   import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 
   export default {
+    data: () => ({
+      snackbar: false,
+      snackbarText: "",
+      error: ""
+    }),
     created (){
-      console.log("susb")
       this.subscribeMarket()
-    },
-    mounted() {
-//      this.getDataFB(collectionItem)
     },
     computed:{
       ... mapState('market',['marketDic']),
-      ... mapGetters('users',['logged'])
+      ... mapState('users',['user']),
+      ... mapGetters('users',['logged']),
+      loggedAdmin(){
+        if (this.logged){
+          if (this.user.email == "daniel@daniel.com"){
+            return true
+          }
+        }
+      }
     },
     methods: {
-      ...mapActions('market',['subscribeMarket','rateFilm','rentFilm']),
+      ...mapActions('market',['subscribeMarket','rateFilm','rentFilm','deleteFilm']),
       async getDataFB (collectionItem) {
         const snapshot = await collectionItem.get();
         snapshot.forEach(doc => {
@@ -97,8 +140,6 @@
         });
       },
       async rate(value, id){
-        console.log("ID DASH", id)
-        console.log("VALUE DASH", value)
         if (id != NaN && value != NaN){
           await this.$nextTick()
           await this.rateFilm({id,value})
@@ -107,6 +148,16 @@
       },
       rent(id){
         this.rentFilm({id})
+      },
+      async deleteItem(id, title){
+        try{
+          await this.deleteFilm(id)
+          this.snackbar = true
+          this.snackbarText = 'Película "' + title + '" borrada con éxito.'
+        } catch (Error){
+          this.error = "Error al borrar la película."
+          this.snackbar = true
+        }
       }
     },
 

@@ -31,15 +31,18 @@
               v-model="quantity"
               label="Nº copias"
               prepend-icon="mdi-numeric"
+              type="number"
               :rules="[
-                required,
-                rulesStock
+                required
               ]"
             />
           <v-rating
           v-model="rating"
           background-color="indigo lighten-3"
           color="indigo"
+          :rules="[
+            required
+          ]"
           ></v-rating>
         </v-form>
     </v-card-text>
@@ -51,7 +54,7 @@
       color="indigo"
       type="submit"
       @click="validate"
-      :disabled="valid"
+      :disabled="!valid"
       :loading="loading"
       >
         <v-icon dark>
@@ -61,13 +64,27 @@
       
     </v-card-actions>
 
-    <v-alert
-    type="type"
-    :value="validAlertOk"
-    >Película añadida con éxito.</v-alert>
+      <v-snackbar
+      v-model="snackbar"
+    >
+      Película añadida con éxito.
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="green"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
+    <v-alert v-if="error" :dismissible="true" @click='error = ""' type="error">
+      {{ error }}
+    </v-alert>
   </v-card>
 </template>
-
 <script>
 
 import firebase from "firebase/app";
@@ -84,57 +101,36 @@ export default {
     rating: 0,
     description: '',
     valid: true,
-    erros: [],
+    error: "",
     loading: false,
-    alertMsg: '',
-    type: null
+    snackbar: false
   }),
-
   methods: {
       ...mapActions('market',["addFilm"]),
-      async addItem () {
-        if (valid == true){
-          this.validAlertOk = true
-          new Promise(resolve => setTimeout(resolve, 1000))
-          this.validAlertOk = false
-          this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 1 })
-        } else {
-
+      async addItem () {   
+        this.loading = true
+        try{
+          await this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 1 })
+          this.snackbar = true
+        } catch (Error){
+          this.error = "Error al añadir la película."
+          this.snackbar = true
         }
+        this.loading = false
+
       },
       async validate(){
-        this.loading = true
-        await new Promise(resolve => setTimeout(resolve, 1000))
         if (this.$refs.form.validate()){
-          this.loading = false
-          //this.addItem()
-          this.type = 'success'
-          
-        await new Promise(resolve => setTimeout({
-          
-        }, 1000))
-
-
-        } else {
-          this.loading = false
+          this.addItem()
         }
-
       }, 
       required(valor){
         if (valor == ""){
-          this.erros.push("No puede ser un campo vacío.")
-          return false
-        }
+          return "No puede ser un campo vacío."
+        } 
         return true
-
-      },
-      rulesStock(valor){
-        if (Number.isInteger(valor) == false){
-          this.erros.push("Debe ser un número.")
-          return false
-        }
-        return true
-      }  
+      }
+      
   }
 }
 </script>
