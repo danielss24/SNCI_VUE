@@ -12,7 +12,7 @@
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
-          :v-if='item.if'
+          :v-if="item.if"
           router
           exact
 
@@ -29,11 +29,13 @@
       <template v-slot:append>
         <div class="pa-2">
           <v-btn block @click="logOut" 
-          v-if="user!=null"
+          v-if="logged"
           >
             Logout
           </v-btn>
+          <login v-else> </login>
         </div>
+
       </template>
     </v-navigation-drawer>
     <v-app-bar
@@ -54,43 +56,16 @@
       >
         <v-icon>mdi-application</v-icon>
       </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
+     
     </v-app-bar>
     <v-main>
       <v-container>
         <nuxt />
       </v-container>
     </v-main>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    
     <v-footer
       :absolute="!fixed"
       app
@@ -103,6 +78,7 @@
 <script>
 import firebase from "firebase/app";
 import 'firebase/auth';
+import { mapGetters } from 'vuex';
 
 export default {
   data () {
@@ -114,38 +90,23 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Bienvenid@',
           to: '/'
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          title: 'Perfil',
+          to: '/profile',
+          if: 'logged'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Login',
-          to: '/login',
-          if:'user=null'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Create',
-          to: '/create',
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'profile',
-          to: '/profile'
-        },
-        {
-          icon: 'mdi-store',
-          title: 'Add Item',
+          icon: 'mdi-movie-plus-outline',
+          title: 'Nueva película',
           to: '/addItem'
         },
         {
           icon: 'mdi-store',
-          title: 'Supermercado',
+          title: 'Videoclub',
           to: '/dashboard'
         }
       ],
@@ -164,13 +125,12 @@ export default {
       console.log(user);
     })
   },
-
+  computed:{
+    ...mapGetters('users',['logged'])
+  },
   methods: {
     logOut(){
-      firebase.auth().signOut().then(result => {
-        this.user = '';
-        this.$router.push('/');
-      })
+      firebase.auth().signOut()
     }
 
   }
