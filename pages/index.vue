@@ -7,10 +7,10 @@
       </div>
       <v-card>
         <v-card-title class="headline">
-          Welcome to videoclub SNCI Project
+          Bienvenid@ al videoclub - SNCI Project
         </v-card-title>
         <v-card-subtitle class="headline">
-          By Daniel Serena and Victor Garcia
+          Daniel Serena and Victor Garcia
         </v-card-subtitle>
         <v-card-text>
           <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>

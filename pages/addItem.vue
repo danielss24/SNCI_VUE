@@ -4,24 +4,38 @@
     max-width="344"
   >
     <v-card-text>
-      <div>Add new item to market</div>
-        <v-form>
+      <div>Añade nueva película al videoclub</div>
+        <v-form 
+        ref = "form"
+        v-model="valid"
+        lazy-validation
+        >
           <v-text-field
             v-model="name"
             masked="true"
-            label="Article"
-            prepend-icon="mdi-basket-plus"
+            label="Título"
+            prepend-icon="mdi-format-title"
+            :rules="[
+              required
+            ]"
           />
           <v-text-field
             v-model="description"
-            label="Description"
-            prepend-icon="mdi-sale"
+            label="Descripción"
+            prepend-icon="mdi-image-text"
+            :rules="[
+              required
+            ]"
           />
-          <v-text-field
-            v-model="quantity"
-            label="Quantity"
-            prepend-icon="mdi-sale"
-          />
+            <v-text-field
+              v-model="quantity"
+              label="Nº copias"
+              prepend-icon="mdi-numeric"
+              :rules="[
+                required,
+                rulesStock
+              ]"
+            />
           <v-rating
           v-model="rating"
           background-color="indigo lighten-3"
@@ -35,22 +49,28 @@
       fab
       dark
       color="indigo"
-      @click="addItem"
+      type="submit"
+      @click="validate"
+      :disabled="valid"
+      :loading="loading"
       >
         <v-icon dark>
         mdi-plus
         </v-icon>
       </v-btn>
+      
     </v-card-actions>
 
-    
+    <v-alert
+    type="type"
+    :value="validAlertOk"
+    >Película añadida con éxito.</v-alert>
   </v-card>
 </template>
 
 <script>
 
 import firebase from "firebase/app";
-import firestore from "firebase/firestore";
 import 'firebase/auth';
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 
@@ -63,16 +83,58 @@ export default {
     quantity: '',
     rating: 0,
     description: '',
-    data: {}
-    //itemMarket
+    valid: true,
+    erros: [],
+    loading: false,
+    alertMsg: '',
+    type: null
   }),
 
   methods: {
       ...mapActions('market',["addFilm"]),
-      addItem () {
-        //console.log({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description })
-        this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 1 })
-      },    
+      async addItem () {
+        if (valid == true){
+          this.validAlertOk = true
+          new Promise(resolve => setTimeout(resolve, 1000))
+          this.validAlertOk = false
+          this.addFilm({name: this.name, quantity: this.quantity, rating: this.rating, description: this.description, contVal: 1 })
+        } else {
+
+        }
+      },
+      async validate(){
+        this.loading = true
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        if (this.$refs.form.validate()){
+          this.loading = false
+          //this.addItem()
+          this.type = 'success'
+          
+        await new Promise(resolve => setTimeout({
+          
+        }, 1000))
+
+
+        } else {
+          this.loading = false
+        }
+
+      }, 
+      required(valor){
+        if (valor == ""){
+          this.erros.push("No puede ser un campo vacío.")
+          return false
+        }
+        return true
+
+      },
+      rulesStock(valor){
+        if (Number.isInteger(valor) == false){
+          this.erros.push("Debe ser un número.")
+          return false
+        }
+        return true
+      }  
   }
 }
 </script>
